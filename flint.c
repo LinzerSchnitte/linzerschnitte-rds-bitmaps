@@ -128,6 +128,12 @@ int main(int argc, char**argv)
 		data01 = 0xFFFFFFFF;
 	}
 
+        if (testpattern == 6)
+        {
+            data01 = 0x00000001;
+            data02 = 0x00000005;
+        }
+
 	double timenow;
 	//double acktime;
 	//double roundtriptime;
@@ -154,32 +160,36 @@ int main(int argc, char**argv)
 
 		if(testpattern==1)
 		{
-		if (data01 == 0X80000000){ shiftleft1=0; }
-		if (shiftleft1==1) {data01 <<= 1;}
-		if (shiftleft1==0) {data01 >>= 1;}
-		if (data01 == 0X00000001) {shiftleft1=1;}
-
-		if (data02 == 0X80000000){ shiftleft2=0; }
-		if (shiftleft2==1) {data02 <<= 1;}
-		if (shiftleft2==0) {data02 >>= 1;}
-		if (data02 == 0X00000001) {shiftleft2=1;}
-
-		if (data03 == 0X80000000){ shiftleft3=0; }
-		if (shiftleft3==1) {data03 <<= 1;}
-		if (shiftleft3==0) {data03 >>= 1;}
-		if (data03 == 0X00000001) {shiftleft3=1;}
-
-		if (data04 == 0X80000000){ shiftleft4=0; }
-		if (shiftleft4==1) {data04 <<= 1;}
-		if (shiftleft4==0) {data04 >>= 1;}
-		if (data04 == 0X00000001) {shiftleft4=1;}
+                    if (data01 == 0X80000000){ shiftleft1=0; }
+                    if (shiftleft1==1) {data01 <<= 1;}
+                    if (shiftleft1==0) {data01 >>= 1;}
+                    if (data01 == 0X00000001) {shiftleft1=1;}
+                    
+                    if (data02 == 0X80000000){ shiftleft2=0; }
+                    if (shiftleft2==1) {data02 <<= 1;}
+                    if (shiftleft2==0) {data02 >>= 1;}
+                    if (data02 == 0X00000001) {shiftleft2=1;}
+                    
+                    if (data03 == 0X80000000){ shiftleft3=0; }
+                    if (shiftleft3==1) {data03 <<= 1;}
+                    if (shiftleft3==0) {data03 >>= 1;}
+                    if (data03 == 0X00000001) {shiftleft3=1;}
+                    
+                    if (data04 == 0X80000000){ shiftleft4=0; }
+                    if (shiftleft4==1) {data04 <<= 1;}
+                    if (shiftleft4==0) {data04 >>= 1;}
+                    if (data04 == 0X00000001) {shiftleft4=1;}
 		}
 		if(testpattern==2)
 		{
-			data01 ^= 0b00000000000000000000000000000001;
-			data02 ^= 0b00000000000000000000000000000001;
-			data03 ^= 0b00000000000000000000000000000001;
-			data04 ^= 0b00000000000000000000000000000001;
+                    data01 ^= 0b11111111111111111111111111111111;
+                    data02 ^= 0b11111111111111111111111111111111;
+                    data03 ^= 0b11111111111111111111111111111111;
+//                    data04 ^= 0b11111111111111111111111111111111;
+                    if (data04 == 0)
+                        data04 = 0xFFFFFFFF;
+                    else
+                        data04 = 0x00000000;
 		}
 
 		if(testpattern==4)
@@ -192,6 +202,21 @@ int main(int argc, char**argv)
 			//data01 ^= 0b00000000000000000000000000000001;
 			data02 ^= 0b00000000000000000000000000000001;
 		}
+                if (testpattern == 6)
+                {
+                    data01 = data01 << 1;
+                    data02 = data02 << 1;
+
+                    if ( (data01 & 0x000000FF) == 0)
+                    {
+                        data01 = 0x00000001;
+                    }
+
+                    if ( (data02 & 0x000000FF) == 0)
+                    {
+                        data02 = 0x00000005;
+                    }
+                }
 
 		usleep(1000*delay);
 
