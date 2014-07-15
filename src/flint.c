@@ -151,7 +151,7 @@ int main(int argc, char**argv)
 
 
 //    uint32_t testdata=0XABCDEF01;
-    unit32_t testdata = 0b00000000000000000000000000000001;
+    uint32_t testdata = 0x00000001;
 
     for(;;)
     {
