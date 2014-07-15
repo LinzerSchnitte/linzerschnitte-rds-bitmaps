@@ -150,7 +150,8 @@ int main(int argc, char**argv)
     flintClock=getProgramClock(flintOffsetClock);
 
 
-    uint32_t testdata=0XABCDEF01;
+//    uint32_t testdata=0XABCDEF01;
+    unit32_t testdata = 0b00000000000000000000000000000001;
 
     for(;;)
     {
@@ -193,7 +194,7 @@ int main(int argc, char**argv)
                     exit(1);
                 }
                 frameid++;
-                testdata++;
+                testdata ^= testdata;
 
                 }
             if (ufds[1].revents & POLLIN) // Recive Socket
