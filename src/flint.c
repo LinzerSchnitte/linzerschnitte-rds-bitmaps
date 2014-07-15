@@ -194,7 +194,7 @@ int main(int argc, char**argv)
                     exit(1);
                 }
                 frameid++;
-                testdata ^= testdata;
+                testdata ^= 0x00000001;
 
                 }
             if (ufds[1].revents & POLLIN) // Recive Socket
