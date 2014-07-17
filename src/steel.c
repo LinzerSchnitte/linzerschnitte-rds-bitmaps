@@ -68,7 +68,7 @@ int main(int argc, char **argv)
         }
     
     // UNCOMMENT TO FOR RDS COMMANDS TO WORK
-    /*
+
 
     //Init GPIO
     
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     RDS_ENABLE_UDG1();
     sleep(1);
     //END GPIO 
-    */
+
     
     uint32_t acks=0;
     uint32_t acks_wrap_buffer=0;
@@ -157,7 +157,8 @@ int main(int argc, char **argv)
 
     // Create RDS Queue Command
     RDS_Command recvcmd, sendcmd;
-
+    sendcmd.cmd = 0;
+    sendcmd.data = 0;
 
     for(;;)
     {
@@ -181,7 +182,7 @@ int main(int argc, char **argv)
                 {
                     sendcmd=QueueDelete(rdsqueue);
                 }
-                //LS_CMD(sendcmd.cmd,sendcmd.data,0);
+                LS_RAW2(sendcmd.cmd,sendcmd.data,0);
 
 
                 printf("RDS COMMAND %u RDS DATA %08X\n",sendcmd.cmd,sendcmd.data);

@@ -38,7 +38,7 @@
 
 #define BUFFERSIZE 32
 #define VESRION 1.10
-#define PACKET_INTERVAL 180000000 //190ms
+#define PACKET_INTERVAL 700000000 //190ms
 
 void print_flint_help(void);
 void print_greating(void);
@@ -55,13 +55,14 @@ int main(int argc, char**argv)
     // Create Packet types
     espDataPacket sendpacket; // We Send espData Packets
     espAckPacket recvpacket;  // We Recive espAck Packets
+    int packetInterval = PACKET_INTERVAL;
 
     // Setup Options
     int cmd_option;
     int port = 1535;
     char *server = "127.0.0.1";
     // Parse cmd line options
-    while((cmd_option=getopt(argc, argv, "hp:s:wc")) != EOF)
+    while((cmd_option=getopt(argc, argv, "hp:s:wct:")) != EOF)
     switch(cmd_option)
     {
         default:
@@ -70,6 +71,7 @@ int main(int argc, char**argv)
         case 's': server=(optarg); break;
         case 'w': print_warranty();
         case 'c': print_conditions();
+        case 't': packetInterval = atoi(optarg) * 1000000; break;
     }
 
 
@@ -123,7 +125,7 @@ int main(int argc, char**argv)
     struct itimerspec timspec;
     bzero(&timspec, sizeof(timspec));
     timspec.it_interval.tv_sec = 0;
-    timspec.it_interval.tv_nsec = PACKET_INTERVAL;
+    timspec.it_interval.tv_nsec = packetInterval; //PACKET_INTERVAL;
     //timspec.it_value.tv_sec = 0;
     timspec.it_value.tv_nsec =1;
 
@@ -152,9 +154,10 @@ int main(int argc, char**argv)
 
 //    uint32_t testdata=0XABCDEF01;
     uint32_t testdata = 0x00000001;
-
+    int ctr = 0;
     for(;;)
     {
+        ctr++;
         rv = poll(ufds, 2, 1);
         //testloopcount++;
         if (rv == -1) 
@@ -186,15 +189,27 @@ int main(int argc, char**argv)
                 //acks=0;
 
                 printf("SENT Packet FrameID=  %d\n",sendpacket.frameid);
-
+                espDataPacket sendpacket2 = sendpacket;
                 sendpacket=data_hton(sendpacket);
                 if (sendto(socket1, &sendpacket, sizeof(espDataPacket), 0, (struct sockaddr *)&remaddr, slen)==-1) 
                 {
                     perror("sendto");
                     exit(1);
                 }
+                sendpacket2.cmd = 21;
+                sendpacket2.data = sendpacket2.data >> 3;
+                sendpacket2=data_hton(sendpacket2);
+                if (sendto(socket1, &sendpacket2, sizeof(espDataPacket), 0, (struct sockaddr *)&remaddr, slen)==-1) 
+                {
+                    perror("sendto");
+                    exit(1);
+                }
                 frameid++;
-                testdata ^= 0x00000001;
+                
+                if ((testdata & 0b00000000000000000000000000111111) == 0)
+                    testdata = 0x00000001;
+                else 
+                    testdata = testdata << 1;
 
                 }
             if (ufds[1].revents & POLLIN) // Recive Socket
