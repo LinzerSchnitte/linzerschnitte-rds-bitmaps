@@ -48,6 +48,8 @@ void print_greating(void);
 
 int main(int argc, char **argv)
 {
+    setbuf(stdout, NULL);
+
     print_greating(); // Prints greating
 
     espDataPacket recvpacket; // We Recive espData Packets
