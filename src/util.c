@@ -131,6 +131,7 @@ RDS_Command QueueDelete(RDS_Queue queue)
 {
     // Need to 
     RDS_Command command;
+    printf("\t\tQ LEN: %d\n", queue->count);
 
     command = queue->contents[queue->front];
 
